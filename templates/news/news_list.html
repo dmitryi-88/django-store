@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>news</title>
+</head>
+
+<body>
+    <div class="news">
+        <h1>Новости</h1>
+
+        <a href="{% url 'news:news_create' %}">Добавить новость</a>
+        <a href="{% url 'news:category_list' %}">Категории</a>
+
+        {% for item in news_list %}
+            <article>
+                <h2>
+                    <a href="{% url 'news:news_detail' item.pk %}">{{ item.title }}</a>
+                </h2>
+
+                <p>Категория: {{ item.category.name }}</p>
+                <p>Автор: {{ item.author.email }}</p>
+                <p>{{ item.created_at }}</p>
+
+                <a href="{% url 'news:news_update' item.pk %}">Редактировать</a>
+                <a href="{% url 'news:news_delete' item.pk %}">Удалить</a>                
+            </article>
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+        {% empty %}
+            <p>Новостей пока нет.</p>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

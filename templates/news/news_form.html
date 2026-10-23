@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новости редактирование</title>
+</head>
+
+<body>
+    <div class="newsForm">
+        <h1>
+            {% if object %}
+                Редактирование новости
+            {% else %}
+                Создание новости
+            {% endif %}
+        </h1>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+</body>
+
+</html>

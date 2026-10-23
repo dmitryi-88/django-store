@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение удалния</title>
+</head>
+
+<body>
+    <div class="confirmDelete">
+        <h1>Удаление объявления</h1>
+
+        <p>Вы действительно хотите удалить объявление "{{ listing.title }}"</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Удалить</button>
+        </form>
+
+        <a href="{% url 'listing_list' %}">Отмена</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Категории</title>
+</head>
+
+<body>
+    <div class="categories">
+        <h1>Категории новостей</h1>
+
+        {% for category in categories %}
+            <p>
+                {{ category.name }} - {{ category.news_count }} новостей
+            </p>
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+        {% empty %}
+            <p>Категорий пока нет.</p>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

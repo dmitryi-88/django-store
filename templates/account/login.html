@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Логин</title>
+</head>
+
+<body>
+    <div class="login">
+        <h1>Вход</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+</body>
+
+</html>
