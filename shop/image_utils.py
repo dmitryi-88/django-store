@@ -4,11 +4,6 @@ from PIL import Image
 from django.core.files.base import ContentFile
 
 
-from io import BytesIO
-
-from PIL import Image
-from django.core.files.base import ContentFile
-
 
 def process_image(uploaded_image, max_size=(1200, 1200), thumbnail_size=(300, 300)):
     with Image.open(uploaded_image) as image:
