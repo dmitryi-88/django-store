@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог товаров</title>
+</head>
+
+<body>
+    <div class="productsCatalog">
+        <h1>Каталог товаров</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <p>
+            <a href="{% url 'shop:cart_detail' %}">Перейти в корзину</a>
+        </p>
+
+        {% for product in products %}
+        <div class="prodItem">
+            <h2>{{ product.name }}</h2>
+            {% if product.thumbnail %}
+                <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}" width="150">
+            {% elif product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="150">
+            {% endif %}
+
+            <p>{{ product.description }}</p>
+            <p>Цена: {{ product.price }}</p>
+            <p>В наличии: {{ product.stock }}</p>
+
+            <form action="{% url 'shop:cart_add' product.id %}" method="post">
+                {% csrf_token %}
+
+                <button type="submit">В корзину</button>
+            </form>
+        </div>
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+        {% empty %}
+        <p>Товары отсутствуют</p>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
