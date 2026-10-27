@@ -1,27 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Категории</title>
-</head>
+{% block title %}Категории новостей — Django Store{% endblock %}
 
-<body>
-    <div class="categories">
+{% block content %}
+<section class="page-heading">
+    <div>
         <h1>Категории новостей</h1>
-
-        {% for category in categories %}
-            <p>
-                {{ category.name }} - {{ category.news_count }} новостей
-            </p>
-        {% if not forloop.last %}
-        <hr>
-        {% endif %}
-        {% empty %}
-            <p>Категорий пока нет.</p>
-        {% endfor %}
+        <p>Обзор тематик публикаций на сайте.</p>
     </div>
-</body>
 
-</html>
+    <a href="{% url 'news:news_list' %}" class="btn btn-secondary">
+        ← Все новости
+    </a>
+</section>
+
+<div class="grid">
+    {% for category in categories %}
+    <article class="card category-card">
+        <div class="card-body">
+            <span class="pill">Категория</span>
+
+            <h2>{{ category.name }}</h2>
+
+            <p class="muted">
+                Публикаций в категории
+            </p>
+
+            <p class="price">
+                {{ category.news_count }}
+                {% if category.news_count == 1 %}
+                новость
+                {% elif category.news_count >= 2 and category.news_count <= 4 %} новости {% else %} новостей {% endif %}
+                    </p>
+        </div>
+    </article>
+    {% empty %}
+    <div class="panel empty-state">
+        <h2>Категорий пока нет</h2>
+        <p>Категории появятся здесь после добавления.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

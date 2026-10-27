@@ -1,0 +1,81 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django Store{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="nav-wrap">
+            <a class="brand" href="{% url 'shop:product_list' %}">
+                Django Store
+            </a>
+
+            <nav class="nav-links">
+                <a href="{% url 'shop:product_list' %}">Магазин</a>
+                <a href="{% url 'shop:cart_detail' %}">Корзина</a>
+                <a href="{% url 'listing_list' %}">Объявления</a>
+                <a href="{% url 'news:news_list' %}">Новости</a>
+            </nav>
+
+            <div class="nav-user">
+                {% if user.is_authenticated %}
+                <span>{{ user.email }}</span>
+
+                {% if user.is_staff %}
+                <a href="{% url 'admin:index' %}">Админка</a>
+                {% endif %}
+
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link-button">
+                        Выйти
+                    </button>
+                </form>
+
+                {% else %}
+                <a href="{% url 'login' %}" class="nav-auth-link">
+                    Войти
+                </a>
+                <a href="{% url 'register' %}" class="nav-auth-link nav-auth-primary">
+                    Регистрация
+                </a>
+                {% endif %}
+
+            </div>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p>© {% now "Y" %} Django Store</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const messages = document.querySelectorAll(".messages .message");
+
+            messages.forEach((message) => {
+                setTimeout(() => {
+                    message.classList.add("message-hidden");
+
+                    setTimeout(() => {
+                        message.remove();
+                    }, 300);
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,24 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Логин</title>
-</head>
+{% block title %}Вход — Django Store{% endblock %}
 
-<body>
-    <div class="login">
-        <h1>Вход</h1>
+{% block content %}
+<div class="narrow">
+    <section class="panel form-panel auth-panel">
+        <div class="auth-heading">
+            <span class="pill">Добро пожаловать</span>
+            <h1>Вход в аккаунт</h1>
+            <p class="muted">
+                Войди, чтобы пользоваться возможностями Django Store.
+            </p>
+        </div>
 
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
 
             <input type="hidden" name="next" value="{{ next }}">
-            <button type="submit">Войти</button>
-        </form>
-    </div>
-</body>
 
-</html>
+            <button type="submit" class="btn">
+                Войти
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p class="muted">Ещё нет аккаунта?</p>
+            <a href="{% url 'register' %}">Зарегистрироваться</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

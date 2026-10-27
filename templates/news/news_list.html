@@ -1,39 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>news</title>
-</head>
+{% block title %}Новости — Django Store{% endblock %}
 
-<body>
-    <div class="news">
+{% block content %}
+<section class="page-heading">
+    <div>
         <h1>Новости</h1>
-
-        <a href="{% url 'news:news_create' %}">Добавить новость</a>
-        <a href="{% url 'news:category_list' %}">Категории</a>
-
-        {% for item in news_list %}
-            <article>
-                <h2>
-                    <a href="{% url 'news:news_detail' item.pk %}">{{ item.title }}</a>
-                </h2>
-
-                <p>Категория: {{ item.category.name }}</p>
-                <p>Автор: {{ item.author.email }}</p>
-                <p>{{ item.created_at }}</p>
-
-                <a href="{% url 'news:news_update' item.pk %}">Редактировать</a>
-                <a href="{% url 'news:news_delete' item.pk %}">Удалить</a>                
-            </article>
-        {% if not forloop.last %}
-        <hr>
-        {% endif %}
-        {% empty %}
-            <p>Новостей пока нет.</p>
-        {% endfor %}
+        <p>Последние публикации и события.</p>
     </div>
-</body>
 
-</html>
+    <div class="actions">
+        <a href="{% url 'news:category_list' %}" class="btn btn-secondary">
+            Категории
+        </a>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'news:news_create' %}" class="btn">
+            + Добавить новость
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<div class="grid">
+    {% for item in news_list %}
+    <article class="card">
+        <div class="card-body">
+            <span class="pill">{{ item.category.name }}</span>
+
+            <h2>
+                <a href="{% url 'news:news_detail' item.pk %}">
+                    {{ item.title }}
+                </a>
+            </h2>
+
+            <p class="muted">
+                Автор: {{ item.author.email }}
+            </p>
+
+            <p class="muted">
+                Опубликовано: {{ item.created_at|date:"d.m.Y H:i" }}
+            </p>
+
+            <div class="actions">
+                <a href="{% url 'news:news_detail' item.pk %}" class="btn btn-secondary">
+                    Читать
+                </a>
+
+                {% if user.is_authenticated %}
+                {% if user == item.author or perms.news.can_edit_others_news %}
+                <a href="{% url 'news:news_update' item.pk %}" class="btn btn-secondary">
+                    Редактировать
+                </a>
+                {% endif %}
+
+                {% if user == item.author or perms.news.can_delete_others_news %}
+                <a href="{% url 'news:news_delete' item.pk %}" class="btn btn-danger">
+                    Удалить
+                </a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </article>
+    {% empty %}
+    <div class="panel empty-state">
+        <h2>Новостей пока нет</h2>
+        <p>Здесь появятся новые публикации.</p>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'news:news_create' %}" class="btn">
+            Добавить новость
+        </a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

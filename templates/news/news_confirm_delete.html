@@ -1,23 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Подтверждение</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-    <div class="confirm">
+{% block title %}Удаление новости — Django Store{% endblock %}
+
+{% block content %}
+<div class="narrow">
+    <section class="panel confirm-panel">
         <h1>Удаление новости</h1>
 
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit">Удалить</button>
-        </form>
+        <p>
+            Ты действительно хочешь удалить новость
+            <strong>«{{ object.title }}»</strong>?
+        </p>
 
-        <a href="{% url 'news:news_detail' object.pk %}">Отмена</a>
-    </div>
-</body>
+        <p class="muted">
+            После подтверждения новость будет удалена.
+        </p>
 
-</html>
+        <div class="actions">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    Да, удалить
+                </button>
+            </form>
+
+            <a
+                href="{% url 'news:news_detail' object.pk %}"
+                class="btn btn-secondary"
+            >
+                Отмена
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@ from django.db.models.query import QuerySet
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie
-from django.views.generic import ListView, DetailView, TemplateView, UpdateView, CreateView
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -68,17 +68,16 @@ class NewsUpdateView(LoginRequiredMixin, UpdateView):
         return queryset.filter(author=self.request.user)
 
 
-class NewsDeleteView(LoginRequiredMixin, DetailView):
+class NewsDeleteView(LoginRequiredMixin, DeleteView):
     model = News
-    template_name = 'news/news_confirm_delete.html'
-    success_url = reverse_lazy('news:news_list')
-    permission_required = 'news.delete_news'
+    template_name = "news/news_confirm_delete.html"
+    success_url = reverse_lazy("news:news_list")
+    permission_required = "news.delete_news"
 
     def get_queryset(self):
         queryset = super().get_queryset()
 
-        if self.request.user.has_perm('news.can_delete_other_news'):
+        if self.request.user.has_perm("news.can_delete_others_news"):
             return queryset
 
         return queryset.filter(author=self.request.user)
-    

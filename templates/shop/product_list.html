@@ -1,52 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог товаров</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-    <div class="productsCatalog">
+{% block title %}Каталог товаров — Django Store{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <div>
         <h1>Каталог товаров</h1>
+        <p>Выбирай товары и добавляй понравившиеся в корзину.</p>
+    </div>
 
-        {% if messages %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
+    <a href="{% url 'shop:cart_detail' %}" class="btn btn-secondary">
+        Перейти в корзину
+    </a>
+</section>
 
-        <p>
-            <a href="{% url 'shop:cart_detail' %}">Перейти в корзину</a>
-        </p>
-
-        {% for product in products %}
-        <div class="prodItem">
-            <h2>{{ product.name }}</h2>
-            {% if product.thumbnail %}
-                <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}" width="150">
-            {% elif product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="150">
-            {% endif %}
-
-            <p>{{ product.description }}</p>
-            <p>Цена: {{ product.price }}</p>
-            <p>В наличии: {{ product.stock }}</p>
-
-            <form action="{% url 'shop:cart_add' product.id %}" method="post">
-                {% csrf_token %}
-
-                <button type="submit">В корзину</button>
-            </form>
-        </div>
-        {% if not forloop.last %}
-        <hr>
-        {% endif %}
-        {% empty %}
-        <p>Товары отсутствуют</p>
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
         {% endfor %}
     </div>
-</body>
+{% endif %}
 
-</html>
+<div class="grid">
+    {% for product in products %}
+        <article class="card">
+            {% if product.thumbnail %}
+                <img
+                    class="card-image"
+                    src="{{ product.thumbnail.url }}"
+                    alt="{{ product.name }}"
+                >
+            {% elif product.image %}
+                <img
+                    class="card-image"
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                >
+            {% else %}
+                <div class="card-image empty-state">
+                    Нет изображения
+                </div>
+            {% endif %}
+
+            <div class="card-body">
+                <h2>{{ product.name }}</h2>
+
+                <p>{{ product.description|truncatewords:25 }}</p>
+
+                <p class="price">{{ product.price }} ₽</p>
+
+                {% if product.stock > 0 %}
+                    <p class="muted">
+                        В наличии: {{ product.stock }}
+                    </p>
+
+                    <form
+                        action="{% url 'shop:cart_add' product.id %}"
+                        method="post"
+                    >
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            В корзину
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="muted">Нет в наличии</p>
+                    <button class="btn" disabled>
+                        Нет в наличии
+                    </button>
+                {% endif %}
+            </div>
+        </article>
+    {% empty %}
+        <div class="panel empty-state">
+            <h2>Пока нет товаров</h2>
+            <p>Загляни позже — каталог ещё пополнится.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

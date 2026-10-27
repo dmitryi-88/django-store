@@ -1,25 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Подтверждение удалния</title>
-</head>
+{% block title %}Удаление объявления — Django Store{% endblock %}
 
-<body>
-    <div class="confirmDelete">
-        <h1>Удаление объявления</h1>
+{% block content %}
+<div class="narrow">
+    <section class="panel confirm-panel">
+        <div class="empty-state">
+            <h1>Удаление объявления</h1>
 
-        <p>Вы действительно хотите удалить объявление "{{ listing.title }}"</p>
+            <p>
+                Ты действительно хочешь удалить объявление
+                <strong>«{{ listing.title }}»</strong>?
+            </p>
 
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit">Удалить</button>
-        </form>
+            <p class="muted">
+                Это действие нельзя будет отменить.
+            </p>
+        </div>
 
-        <a href="{% url 'listing_list' %}">Отмена</a>
-    </div>
-</body>
+        <div class="actions">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    Да, удалить
+                </button>
+            </form>
 
-</html>
+            <a href="{% url 'listing_list' %}" class="btn btn-secondary">
+                Отмена
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

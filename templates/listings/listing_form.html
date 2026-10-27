@@ -1,21 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание объявления</title>
-</head>
+{% block title %}
+{% if form.instance.pk %}
+Редактирование объявления — Django Store
+{% else %}
+Создание объявления — Django Store
+{% endif %}
+{% endblock %}
 
-<body>
-    <div class="createListing">
+{% block content %}
+<div class="narrow">
+    <section class="panel form-panel">
+        {% if form.instance.pk %}
+        <h1>Редактирование объявления</h1>
+        <p class="muted">Измени информацию и сохрани обновлённое объявление.</p>
+        {% else %}
+        <h1>Создание объявления</h1>
+        <p class="muted">Заполни поля, чтобы опубликовать новое предложение.</p>
+        {% endif %}
+
         <form method="post">
-            <h1>Создание объявления</h1>
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Создать</button>
-        </form>
-    </div>
-</body>
 
-</html>
+            {{ form.as_p }}
+
+            <div class="actions">
+                <button type="submit" class="btn">
+                    {% if form.instance.pk %}
+                    Сохранить изменения
+                    {% else %}
+                    Создать объявление
+                    {% endif %}
+                </button>
+
+                <a href="{% url 'listing_list' %}" class="btn btn-secondary">
+                    Отмена
+                </a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

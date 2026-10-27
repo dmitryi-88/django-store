@@ -1,28 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Новости редактирование</title>
-</head>
+{% block title %}
+{% if object %}
+Редактирование новости — Django Store
+{% else %}
+Создание новости — Django Store
+{% endif %}
+{% endblock %}
 
-<body>
-    <div class="newsForm">
-        <h1>
-            {% if object %}
-                Редактирование новости
-            {% else %}
-                Создание новости
-            {% endif %}
-        </h1>
+{% block content %}
+<div class="narrow">
+    <section class="panel form-panel">
+        {% if object %}
+        <h1>Редактирование новости</h1>
+        <p class="muted">Внеси изменения и сохрани публикацию.</p>
+        {% else %}
+        <h1>Создание новости</h1>
+        <p class="muted">Заполни поля, чтобы опубликовать новость.</p>
+        {% endif %}
 
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Сохранить</button>
-        </form>
-    </div>
-</body>
 
-</html>
+            {{ form.as_p }}
+
+            <div class="actions">
+                <button type="submit" class="btn">
+                    Сохранить
+                </button>
+
+                <a href="{% url 'news:news_list' %}" class="btn btn-secondary">
+                    Отмена
+                </a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

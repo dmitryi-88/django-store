@@ -1,27 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ news.title }}</title>
-</head>
+{% block title %}{{ news.title }} — Django Store{% endblock %}
 
-<body>
-    <div class="newsDetail">
-        <article>
-            <h1>{{ news.title }}</h1>
+{% block content %}
+<div class="narrow">
+    <article class="panel news-article">
+        <a href="{% url 'news:news_list' %}" class="back-link">
+            ← Все новости
+        </a>
 
-            <p>Категория: {{ news.category.name }}</p>
-            <p>Автор: {{ news.author.email }}</p>
-            <p>Опубликовано: {{ news.created_at }}</p>
+        <div class="news-meta">
+            <span class="pill">{{ news.category.name }}</span>
+            <span class="muted">
+                {{ news.created_at|date:"d.m.Y H:i" }}
+            </span>
+        </div>
 
-            <h2>Детали:</h2>
-            <span>{{ news.content|linebreaks }}</span>
-        </article>
+        <h1>{{ news.title }}</h1>
 
-        <a href="{% url 'news:news_list' %}">К списку новостей</a>
-    </div>
-</body>
+        <p class="muted">
+            Автор: {{ news.author.email }}
+        </p>
 
-</html>
+        <div class="news-content">
+            {{ news.content|linebreaks }}
+        </div>
+
+        <div class="article-footer">
+            <a href="{% url 'news:news_list' %}" class="btn btn-secondary">
+                К списку новостей
+            </a>
+        </div>
+    </article>
+</div>
+{% endblock %}

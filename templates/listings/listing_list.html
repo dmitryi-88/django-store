@@ -1,38 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обявления</title>
-</head>
+{% block title %}Объявления — Django Store{% endblock %}
 
-<body>
-    <div class="listings">
+{% block content %}
+<section class="page-heading">
+    <div>
         <h1>Объявления</h1>
+        <p>Предложения пользователей нашего сайта.</p>
+    </div>
 
-        <a href="{% url 'create_listing' %}">Создать объявление</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'create_listing' %}" class="btn">
+        + Создать объявление
+    </a>
+    {% endif %}
+</section>
 
-        {% for listing in listings %}
-            <article>
-                <h2>{{ listing.title }}</h2>
-                <p>{{ listing.description }}</p>
-                <p>Цена: {{ listing.price }}</p>
-                <p>Автор: {{ listing.owner.email }}</p>
-            </article>
+<div class="grid">
+    {% for listing in listings %}
+    <article class="card">
+        <div class="card-body">
+            <span class="pill">Объявление</span>
+
+            <h2>{{ listing.title }}</h2>
+
+            <p>{{ listing.description|truncatewords:35 }}</p>
+
+            <p class="price">{{ listing.price }} ₽</p>
+
+            <p class="muted">
+                Автор: {{ listing.owner.email }}
+            </p>
+
+            {% if user.is_authenticated %}
+            {% if user == listing.owner or user.is_staff %}
+            <div class="actions">
+                <a href="{% url 'edit_listing' listing.id %}" class="btn btn-secondary">
+                    Редактировать
+                </a>
+
+                <a href="{% url 'delete_listing' listing.id %}" class="btn btn-danger">
+                    Удалить
+                </a>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </article>
+    {% empty %}
+    <div class="panel empty-state">
+        <h2>Объявлений пока нет</h2>
+        <p>Стань первым, кто опубликует своё предложение!</p>
 
         {% if user.is_authenticated %}
-            <a href="{% url 'edit_listing' listing.id %}">редактировать</a>
-            <a href="{% url 'delete_listing' listing.id %}">удалить</a>
-        {% endif%}
-
-        {% if not forloop.last %}
-            <hr>
+        <a href="{% url 'create_listing' %}" class="btn">
+            Создать объявление
+        </a>
         {% endif %}
-        {% empty %}
-            <h3>Объявлений пока нет</h3>
-        {% endfor %}
     </div>
-</body>
-
-</html>
+    {% endfor %}
+</div>
+{% endblock %}

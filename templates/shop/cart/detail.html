@@ -1,55 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Корзина</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-    <div class="cart">
+{% block title %}Корзина — Django Store{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <div>
         <h1>Корзина покупок</h1>
-
-        {% if cart %}
-        <table border="1" cellpadding="8">
-            <thead>
-                <tr>
-                    <th>Товар</th>
-                    <th>Цена</th>
-                    <th>Количество</th>
-                    <th>Сумма</th>
-                    <th>Действие</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for item in cart %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.total_price }}</td>
-                    <td>
-                        <form action="{% url 'shop:cart_remove' item.product.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit">Удалить</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <h2>Итого: {{ cart.get_total_price }} руб.</h2>
-        <form action="{% url 'shop:checkout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Оформить заказ</button>
-        </form>
-        {% else %}
-        <p>Корзина пуста.</p>
-        {% endif %}
+        <p>Проверь товары перед оформлением заказа.</p>
     </div>
-</body>
 
-</html>
+    <a href="{% url 'shop:product_list' %}" class="btn btn-secondary">
+        Продолжить покупки
+    </a>
+</section>
+
+<div class="panel">
+    {% if cart %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Цена</th>
+                        <th>Количество</th>
+                        <th>Сумма</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td>
+                                <strong>{{ item.product.name }}</strong>
+                            </td>
+                            <td>{{ item.price }} ₽</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>
+                                <strong>{{ item.total_price }} ₽</strong>
+                            </td>
+                            <td>
+                                <form
+                                    action="{% url 'shop:cart_remove' item.product.id %}"
+                                    method="post"
+                                >
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">
+                                        Удалить
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cart-summary">
+            <p class="muted">Общая стоимость заказа</p>
+            <h2 class="price">{{ cart.get_total_price }} ₽</h2>
+
+            <form action="{% url 'shop:checkout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn">
+                    Оформить заказ
+                </button>
+            </form>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h2>Корзина пока пуста</h2>
+            <p>Добавь товары из каталога, чтобы оформить заказ.</p>
+
+            <a href="{% url 'shop:product_list' %}" class="btn">
+                Перейти в каталог
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
